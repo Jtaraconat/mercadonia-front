@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import headphones from "../Resources/Img/headphones.jpg";
+import Card from "../Components/Card.js";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -11,6 +13,7 @@ export default function Home() {
   const loadProducts = async () => {
     const res = await axios.get("http://localhost:8080/products");
     setProducts(res.data);
+    console.log(res);
   };
 
   return (
@@ -19,41 +22,10 @@ export default function Home() {
         <div className="col col-sm-3 border">categories</div>
         <div className="d-flex flex-wrap align-content-around justify-content-center col">
           {products.map((product, index) => (
-            <div className="p-2 " key={index}>
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src="{product.image}"
-                  alt="Card image cap"
-                />
-                <div className="card-body border shadow" key={index}>
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text">{product.description}</p>
-                </div>
-              </div>
-            </div>
+            <Card product={product} index={index} />
           ))}
         </div>
       </div>
     </div>
   );
 }
-/*
-<div className="container">
-      <div className="py-4">
-        {products.map((product, index) => {
-          <div className="card">
-            <img
-              className="card-img-top"
-              src="{product.image}"
-              alt="Card image cap"
-            />
-            <div className="card-body border shadow" key={index}>
-              <h5 className="card-title">{product.name}</h5>
-              <p className="card-text">{product.description}</p>
-            </div>
-          </div>;
-        })}
-      </div>
-    </div>
-*/

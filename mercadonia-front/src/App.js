@@ -1,6 +1,7 @@
 import "./App.css";
-import Navbar from "./Layout/Navbar";
+import Navbar from "./Components/Navbar";
 import Home from "./Pages/Home";
+import Admin from "./Pages/Admin";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div className="App">
       <Navbar />
       <Home />
+      <Admin />
     </div>
   );
 }
