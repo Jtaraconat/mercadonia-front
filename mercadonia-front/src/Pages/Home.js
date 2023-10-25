@@ -13,7 +13,6 @@ export default function Home() {
   const loadProducts = async () => {
     const res = await axios.get("http://localhost:8080/products");
     setProducts(res.data);
-    console.log(res);
   };
 
   return (

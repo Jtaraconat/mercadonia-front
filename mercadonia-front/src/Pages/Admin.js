@@ -1,7 +1,6 @@
-import Navbar from "../Components/Navbar";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AddProductModal from "../Components/AddProductModal";
+import { Link } from "react-router-dom";
 
 export default function Admin() {
   const [admin, setAdmin] = useState([]);
@@ -17,13 +16,13 @@ export default function Admin() {
 
   return (
     <div className="container-fluid">
-      <div>
-        <Navbar />
-        <h1>{"Bienvenue " + admin.username}</h1>
-      </div>
-      <div className="admin-menu d-flex justify-content-around">
-        <AddProductModal />
-      </div>
+      <p>hello</p>
+      <Link className="btn btn-outline-dark m-2" to="/admin/addproduct">
+        Ajouter un produit
+      </Link>
+      <Link className="btn btn-outline-dark m-2" to="/admin/editproduct">
+        Rechercher et modifier un produit
+      </Link>
     </div>
   );
 }
