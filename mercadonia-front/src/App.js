@@ -5,7 +5,8 @@ import Admin from "./Pages/Admin";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AddProduct from "./Components/AddProduct";
-import SearchEditProduct from "./Components/SearchEditProduct";
+import SearchProduct from "./Components/SearchProduct";
+import EditProduct from "./Components/EditProduct";
 
 function App() {
   return (
@@ -18,9 +19,10 @@ function App() {
           <Route exact path="/admin/addproduct" element={<AddProduct />} />
           <Route
             exact
-            path="/admin/editproduct"
-            element={<SearchEditProduct />}
+            path="/admin/searchproduct"
+            element={<SearchProduct />}
           />
+          <Route exact path="/admin/:id" element={<EditProduct />} />
         </Routes>
       </Router>
     </div>

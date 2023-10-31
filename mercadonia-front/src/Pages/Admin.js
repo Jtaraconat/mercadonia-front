@@ -20,7 +20,7 @@ export default function Admin() {
       <Link className="btn btn-outline-dark m-2" to="/admin/addproduct">
         Ajouter un produit
       </Link>
-      <Link className="btn btn-outline-dark m-2" to="/admin/editproduct">
+      <Link className="btn btn-outline-dark m-2" to="/admin/searchproduct">
         Rechercher et modifier un produit
       </Link>
     </div>
