@@ -2,19 +2,26 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Card from "./Card";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 export default function SearchProduct() {
   let navigate = useNavigate();
+  let finalPrice = 0;
+  let promoStartTimestamp;
+  let promoEndTimestamp;
   const [categories, setCategories] = useState([]);
-  const [dataURI, setDataURI] = useState("");
   const [searchedProduct, setSearchedProduct] = useState("");
+  const [promoPercentage, setPromoPercentage] = useState(0);
   const [foundProduct, setFoundProduct] = useState("");
   const [productId, setProductId] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const [productVisibility, setProductVisibility] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
-    loadProduct();
     loadCategories();
   }, []);
 
@@ -44,6 +51,10 @@ export default function SearchProduct() {
     setSearchedProduct(e.target.value);
   };
 
+  const onPromoInput = (e) => {
+    setPromoPercentage(e.target.value);
+  };
+
   const onSubmitSearch = async (e) => {
     e.preventDefault();
     if (searchedProduct.length == 0) {
@@ -60,38 +71,45 @@ export default function SearchProduct() {
     image: "",
   });
 
-  const onInputChange = (e) => {
-    setProduct({
-      ...product,
-      [e.target.name]: e.target.value,
-      image: dataURI,
-    });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    await axios.put(`http://localhost:8080/product/${productId}`, product);
-    navigate("/admin");
-  };
-
-  const fileToDataUri = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    });
-
-  const onChange = (file) => {
-    if (!file) {
-      setDataURI("");
-      return;
+  const calcPromo = () => {
+    const actualPrice = foundProduct.price;
+    if (promoPercentage >= 1 && promoPercentage <= 99) {
+      const reduction = actualPrice * (promoPercentage / 100);
+      finalPrice = actualPrice - reduction;
+      return finalPrice;
     }
+  };
 
-    fileToDataUri(file).then((dataUri) => {
-      setDataURI(dataUri);
+  const onPromoStartChange = (e) => {
+    promoStartTimestamp = e.target.valueAsNumber;
+    setFoundProduct({
+      ...foundProduct,
+      promoStart: promoStartTimestamp,
     });
+  };
+
+  const onPromoEndChange = (e) => {
+    promoEndTimestamp = e.target.valueAsNumber;
+    setFoundProduct({
+      ...foundProduct,
+      promoEnd: promoEndTimestamp,
+    });
+  };
+
+  const onSubmitPromo = async (e) => {
+    e.preventDefault();
+    calcPromo();
+    foundProduct.promoPrice = finalPrice;
+    console.log(foundProduct);
+
+    await axios.put(
+      `http://localhost:8080/product/${foundProduct.id}`,
+      foundProduct
+    );
+
+    console.log(foundProduct);
+
+    navigate("/admin");
   };
 
   return (
@@ -132,22 +150,78 @@ export default function SearchProduct() {
       </div>
 
       {productVisibility ? (
-        <div className="form-group mb-3">
-          <Card product={foundProduct} />
-          <div className="from-control d-flex justify-content-evenly">
-            <Link type="button" className="btn btn-danger mt-2" to="/admin">
-              Annuler
-            </Link>
-            <Link
-              type="submit"
-              className="btn btn-primary mt-2"
-              to={`admin/editproduct/${foundProduct.id}`}
-            >
-              Modifier le produit
-            </Link>
-            <Link type="submit" className="btn btn-success mt-2">
-              Promotions
-            </Link>
+        <div>
+          <div className="form-group mb-3 d-flex">
+            <Card product={foundProduct} />
+          </div>
+          <div className="form-group mb-3">
+            <div className="from-control d-flex justify-content-evenly">
+              <Link
+                type="submit"
+                className="btn btn-primary mt-2"
+                to={`${foundProduct.id}`}
+              >
+                Modifier le produit
+              </Link>
+              <>
+                <Button variant="success" onClick={handleShow}>
+                  Promotions
+                </Button>
+
+                <Modal show={show} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      Saisir la promotion pour {foundProduct.name}
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <label className="text-uppercase font-weight-bold">
+                      Pourcentage
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control mb-3"
+                      name="percentage"
+                      placeholder="pourcentage de réduction"
+                      onChange={(e) => onPromoInput(e)}
+                    />
+                    <label className="text-uppercase font-weight-bold">
+                      Date de début de la promotion
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control  mb-3"
+                      id="startDate"
+                      name="startDate"
+                      placeholder="Date de début de la promotion"
+                      onChange={(e) => onPromoStartChange(e)}
+                    />
+                    <label className="text-uppercase font-weight-bold">
+                      Date de fin de la promotion
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control  mb-3"
+                      id="endDate"
+                      name="endDate"
+                      placeholder="Date de fin de la promotion"
+                      onChange={(e) => {
+                        onPromoEndChange(e);
+                      }}
+                    />
+                    <p>Nouveau prix : {calcPromo()} €</p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                      Annuler
+                    </Button>
+                    <Button variant="success" onClick={onSubmitPromo}>
+                      Valider la promotion
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </>
+            </div>
           </div>
         </div>
       ) : (
@@ -156,130 +230,3 @@ export default function SearchProduct() {
     </div>
   );
 }
-
-/* <>
-          {productVisibility ? (
-            <div>
-              <form onSubmit={(e) => onSubmit(e)}>
-                <div className="custom-file mb-5 d-flex flex-column">
-                  <label className="custom-file-label text-uppercase font-weight-bold">
-                    Ajouter une image
-                  </label>
-                  <input
-                    type="file"
-                    className="custom-file-input"
-                    name="image"
-                    onChange={(e) => onChange(e.target.files[0] || null)}
-                  />
-                </div>
-                <div className="form-group mb-5">
-                  <img
-                    src={foundProduct.image}
-                    alt="Image produit manquante"
-                    style={{
-                      width: 300,
-                      height: 300,
-                    }}
-                    className="m-3"
-                  ></img>
-                  <img
-                    src={dataURI}
-                    style={{
-                      width: 300,
-                      height: 300,
-                    }}
-                    alt="Selectionnez une image"
-                    className="m-3"
-                  ></img>
-                </div>
-                <div className="form-group mb-5">
-                  <label className="text-uppercase font-weight-bold">
-                    Nom du produit
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    placeholder="nom du produit"
-                    value={foundProduct.name}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </div>
-                <div className="form-group mb-5">
-                  <label className="text-uppercase font-weight-bold">
-                    Nom du produit
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nameUpdate"
-                    placeholder="nom du produit"
-                    value={product.name}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </div>
-                <div className="form-group mb-5">
-                  <label className="text-uppercase font-weight-bold">
-                    Description
-                  </label>
-                  <textarea
-                    type="textarea"
-                    className="form-control"
-                    name="description"
-                    placeholder="description"
-                    rows="4"
-                    value={foundProduct.description}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </div>
-                <div className="form-group mb-5">
-                  <label className="text-uppercase font-weight-bold">
-                    Prix
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="price"
-                    placeholder="prix en €"
-                    value={foundProduct.price}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </div>
-                <div className="form-group mb-5 d-flex flex-column">
-                  <label
-                    className="text-uppercase font-weight-bold"
-                    defaultValue={""}
-                  >
-                    Selectionner une catégorie
-                  </label>
-                  <select
-                    className="custom-select custom-select-lg mb-5"
-                    onChange={(e) => onInputChange(e)}
-                    name="productCategory"
-                    value={foundProduct.productCategory}
-                  >
-                    {categories.map((category, index) => (
-                      <option category={category} key={index}>
-                        {category.tag}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group mb-3">
-                  <div className="from-control d-flex justify-content-evenly">
-                    <button type="button" className="btn btn-danger mt-2">
-                      Annuler
-                    </button>
-                    <button type="submit" className="btn btn-primary mt-2">
-                      Modifier le produit
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          ) : (
-            ""
-          )}{" "}
-        </>
-        */

@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AddProduct from "./Components/AddProduct";
 import SearchProduct from "./Components/SearchProduct";
 import EditProduct from "./Components/EditProduct";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -22,9 +23,14 @@ function App() {
             path="/admin/searchproduct"
             element={<SearchProduct />}
           />
-          <Route exact path="/admin/:id" element={<EditProduct />} />
+          <Route
+            exact
+            path="/admin/searchproduct/:id"
+            element={<EditProduct />}
+          />
         </Routes>
       </Router>
+      <Footer />
     </div>
   );
 }

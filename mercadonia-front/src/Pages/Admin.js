@@ -15,7 +15,12 @@ export default function Admin() {
   };
 
   return (
-    <div className="container-fluid">
+    <div
+      className="container-fluid"
+      style={{
+        backgroundColor: "#FDF8D8",
+      }}
+    >
       <p>hello</p>
       <Link className="btn btn-outline-dark m-2" to="/admin/addproduct">
         Ajouter un produit

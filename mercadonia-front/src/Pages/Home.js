@@ -9,11 +9,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filterCategories, setFilterCategories] = useState([]);
-
-  const loadCategories = async () => {
-    const res = await axios.get("http://localhost:8080/categories");
-    setCategories(res.data);
-  };
+  let timestamp;
 
   useEffect(() => {
     loadProducts();
@@ -23,6 +19,11 @@ export default function Home() {
   const loadProducts = async () => {
     const res = await axios.get("http://localhost:8080/products");
     setProducts(res.data);
+  };
+
+  const loadCategories = async () => {
+    const res = await axios.get("http://localhost:8080/categories");
+    setCategories(res.data);
   };
 
   //a revoir
@@ -35,7 +36,13 @@ export default function Home() {
   };
 
   return (
-    <div className="container-fluid mt-5">
+    <div
+      className="container-fluid"
+      style={{
+        height: "100vh",
+        backgroundColor: "#FDF8D8",
+      }}
+    >
       <div>
         <Dropdown className="m-3">
           <Dropdown.Toggle id="dropdown-basic">
@@ -61,6 +68,8 @@ export default function Home() {
           </Dropdown.Menu>
         </Dropdown>
       </div>
+      {/* prix conditionnel timestamp > promoStart && timeStamp < promoEnd ?
+        pricePromo : price */}
       <div className="row">
         <div className="d-flex flex-wrap align-content-around justify-content-center col">
           {products.map((product, index) => (
