@@ -1,4 +1,3 @@
-import headphones from "../Resources/Img/headphones.jpg";
 import React, { useEffect, useState } from "react";
 
 export default function Card({ product, index }) {
@@ -8,7 +7,6 @@ export default function Card({ product, index }) {
   const getCurrentDate = () => {
     const newDate = new Date();
     timestamp = newDate.getTime();
-    console.log(timestamp);
   };
 
   useEffect(() => {
@@ -38,23 +36,23 @@ export default function Card({ product, index }) {
         src={`${product.image}`}
         alt={product.image}
         style={{
-          width: 250,
+          width: 300,
           height: 250,
         }}
       />
-      <div className="card-body border shadow" key={index}>
-        <h5 className="card-title">{product.name}</h5>
-        <p className="card-text">{product.description}</p>
+      <div className="card-body border shadow d-flex flex-column" key={index}>
+        <h5 className="card-title text-uppercase">{product.name}</h5>
+
         {promoVisibility ? (
-          <div className="d-flex align-items-center justify-content-around">
-            <p>
-              <s>ancien prix: {product.price} €</s>
-            </p>
+          <div className="d-flex align-items-center justify-content-between">
+            <s className="fst-italic fw-light">
+              ancien prix: {product.price} €
+            </s>
+
             <p
-              className="card-price display-6"
+              className="card-price display-6 fw-bold"
               style={{
                 color: "red",
-                fontWeight: "bold",
               }}
             >
               {product.promoPrice + " €"}
@@ -62,9 +60,10 @@ export default function Card({ product, index }) {
           </div>
         ) : (
           <div>
-            <p className="card-price">{product.price + " €"}</p>
+            <p className="card-price fs-4">{product.price + " €"}</p>
           </div>
         )}
+        <p className="card-text card-footer p-0">{product.description}</p>
       </div>
     </div>
   );

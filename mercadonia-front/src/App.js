@@ -7,7 +7,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AddProduct from "./Components/AddProduct";
 import SearchProduct from "./Components/SearchProduct";
 import EditProduct from "./Components/EditProduct";
-import Footer from "./Components/Footer";
+import HandleCategories from "./Components/HandleCategories";
+import HandleAdmins from "./Components/HandleAdmins";
+import Login from "./Components/Login";
+import ProtectedRoutes from "./Utils/ProtectedRoutes";
 
 function App() {
   return (
@@ -16,21 +19,31 @@ function App() {
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/admin" element={<Admin />} />
-          <Route exact path="/admin/addproduct" element={<AddProduct />} />
-          <Route
-            exact
-            path="/admin/searchproduct"
-            element={<SearchProduct />}
-          />
-          <Route
-            exact
-            path="/admin/searchproduct/:id"
-            element={<EditProduct />}
-          />
+
+          <Route element={<ProtectedRoutes />}>
+            <Route exact path="/admin" element={<Admin />} />
+            <Route exact path="/admin/addproduct" element={<AddProduct />} />
+            <Route
+              exact
+              path="/admin/searchproduct"
+              element={<SearchProduct />}
+            />
+            <Route
+              exact
+              path="/admin/searchproduct/:id"
+              element={<EditProduct />}
+            />
+            <Route
+              exact
+              path="/admin/handlecategories"
+              element={<HandleCategories />}
+            />
+            <Route exact path="/admin/newadmin" element={<HandleAdmins />} />
+          </Route>
+
+          <Route exact path="/login" element={<Login />} />
         </Routes>
       </Router>
-      <Footer />
     </div>
   );
 }

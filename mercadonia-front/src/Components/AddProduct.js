@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -6,6 +8,9 @@ export default function AddProduct() {
   let navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const loadCategories = async () => {
     const res = await axios.get("http://localhost:8080/categories");
@@ -14,23 +19,49 @@ export default function AddProduct() {
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [categories]);
 
   const [product, setProduct] = useState({
     name: "",
     description: "",
     price: 0,
-    productCategory: "",
+    category: "",
     image: "",
   });
 
-  const { name, description, price, productCategory, image } = product;
+  const { name, description, price, category, image } = product;
   const onInputChange = (e) => {
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
       image: dataURI,
     });
+  };
+
+  const [newCategory, setNewCategory] = useState({
+    tag: "",
+  });
+
+  const onNewCategoryInputChange = (e) => {
+    setNewCategory({ tag: e.target.value });
+  };
+
+  const addCategory = async () => {
+    for (let i = 0; i < categories.length; i++) {
+      if (categories[i].tag == newCategory.tag) {
+        alert("La catégorie existe déjà");
+        return;
+      }
+    }
+    if (newCategory.tag.length === 0) {
+      alert("saisir un nom pour la catégorie");
+    } else {
+      const res = await axios.post(
+        `http://localhost:8080/category`,
+        newCategory
+      );
+      handleClose();
+    }
   };
 
   const fileToDataUri = (file) =>
@@ -55,15 +86,24 @@ export default function AddProduct() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (
+      product.name === "" ||
+      product.description === "" ||
+      product.image === "" ||
+      product.category === "" ||
+      product.price === 0
+    ) {
+      alert("Un ou plusieurs champ(s) manquant(s)");
+      return;
+    }
     await axios.post("http://localhost:8080/product", product);
-
     navigate("/admin");
   };
 
   return (
-    <div className="container-fluid shadow p-3 mb-5 bg-white rounded">
+    <div className="container-fluid shadow p-3 mb-5 bg-white rounded shadow">
       <button
-        className="btn btn-primary mb-2 d-flex align-self-start"
+        className="btn btn-danger mb-2 d-flex align-self-start"
         onClick={() => navigate(-1)}
       >
         Retour
@@ -89,6 +129,7 @@ export default function AddProduct() {
               maxWidth: 300,
               maxHeight: 300,
             }}
+            alt="image produit"
           ></img>
         </div>
         <div className="form-group mb-5">
@@ -131,12 +172,44 @@ export default function AddProduct() {
           <label className="text-uppercase font-weight-bold" defaultValue={""}>
             Selectionner une catégorie
           </label>
+          <>
+            <Button variant="primary" onClick={handleShow}>
+              Ajouter une catégorie
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Ajouter une catégorie</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="newCategory"
+                  placeholder="Nom de la catégorie"
+                  value={newCategory.tag}
+                  onChange={(e) => onNewCategoryInputChange(e)}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={addCategory}>
+                  Ajouter
+                </Button>
+                <Button variant="danger" onClick={handleClose}>
+                  Annuler
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </>
+
           <select
             className="custom-select custom-select-lg mb-5"
             onChange={(e) => onInputChange(e)}
-            name="productCategory"
-            value={productCategory}
+            name="category"
+            value={category}
           >
+            <option>Sélectionner une catégorie</option>
+
             {categories.map((category, index) => (
               <option category={category} key={index}>
                 {category.tag}
@@ -146,8 +219,8 @@ export default function AddProduct() {
         </div>
 
         <div className="form-group mb-3">
-          <div className="from-control">
-            <button type="submit" className="btn btn-primary mt-2">
+          <div className="from-control d-flex justify-content-end ">
+            <button type="submit" className="btn btn-success mt-2 ">
               Ajouter le produit
             </button>
           </div>

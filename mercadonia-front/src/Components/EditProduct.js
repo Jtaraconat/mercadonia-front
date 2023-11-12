@@ -6,9 +6,13 @@ import Modal from "react-bootstrap/Modal";
 
 export default function EditProduct() {
   let navigate = useNavigate();
+  let finalPrice = 0;
+  let promoStartTimestamp;
+  let promoEndTimestamp;
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
   const [show, setShow] = useState(false);
+  const [promoPercentage, setPromoPercentage] = useState(0);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const { id } = useParams();
@@ -37,11 +41,11 @@ export default function EditProduct() {
     name: "",
     description: "",
     price: 0,
-    productCategory: "",
+    category: "",
     image: "",
   });
 
-  const { name, description, price, productCategory, image } = product;
+  const { name, description, price, category, image } = product;
   const onInputChange = (e) => {
     setProduct({
       ...product,
@@ -72,23 +76,134 @@ export default function EditProduct() {
     });
   };
 
+  const calcPromo = () => {
+    const actualPrice = product.price;
+    if (promoPercentage >= 1 && promoPercentage <= 99) {
+      const reduction = actualPrice * (promoPercentage / 100);
+      finalPrice = actualPrice - reduction;
+      return finalPrice;
+    }
+  };
+
+  const onPromoStartChange = (e) => {
+    promoStartTimestamp = e.target.valueAsNumber;
+    setProduct({
+      ...product,
+      promoStart: promoStartTimestamp,
+    });
+  };
+
+  const onPromoEndChange = (e) => {
+    promoEndTimestamp = e.target.valueAsNumber;
+    setProduct({
+      ...product,
+      promoEnd: promoEndTimestamp,
+    });
+  };
+
+  const onPromoInput = (e) => {
+    if (e.target.value >= 0 && e.target.value <= 99) {
+      setPromoPercentage(e.target.value);
+    } else {
+      alert("La promo doit être comprise être 1 et 99");
+    }
+  };
+
+  const onSubmitPromo = async (e) => {
+    e.preventDefault();
+    calcPromo();
+    product.promoPrice = finalPrice;
+    if (
+      product.promoEnd === 0 &&
+      product.promoStart === 0 &&
+      product.promoPrice === 0
+    ) {
+      alert("Champ(s) manquant(s)");
+      return;
+    }
+    await axios.put(`http://localhost:8080/product/${product.id}`, product);
+    navigate("/");
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
-
     await axios.put(`http://localhost:8080/product/${id}`, product);
-
     navigate("/admin");
   };
 
   return (
     <div className="container-fluid shadow p-3 mb-5 rounded">
       <button
-        className="btn btn-primary mb-2 d-flex align-self-start"
+        className="btn btn-primary mb-2  d-flex align-self-start"
         onClick={() => navigate(-1)}
       >
         Retour
       </button>
+
       <h1 className="mb-5 text-uppercase">Modifier le produit</h1>
+      <div className="mb-5 ">
+        <>
+          <Button variant="success" onClick={handleShow}>
+            Promotions
+          </Button>
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Saisir la promotion pour {product.name.toLowerCase()}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <label className="text-uppercase font-weight-bold">
+                Pourcentage
+              </label>
+              <input
+                required
+                type="text"
+                className="form-control mb-3"
+                name="percentage"
+                placeholder="pourcentage de réduction"
+                onChange={(e) => onPromoInput(e)}
+              />
+              <label className="text-uppercase font-weight-bold">
+                Date de début de la promotion
+              </label>
+              <input
+                required
+                type="date"
+                className="form-control  mb-3"
+                id="startDate"
+                name="startDate"
+                placeholder="Date de début de la promotion"
+                onChange={(e) => onPromoStartChange(e)}
+              />
+              <label className="text-uppercase font-weight-bold">
+                Date de fin de la promotion
+              </label>
+              <input
+                required
+                type="date"
+                className="form-control  mb-3"
+                id="endDate"
+                name="endDate"
+                placeholder="Date de fin de la promotion"
+                onChange={(e) => {
+                  onPromoEndChange(e);
+                }}
+              />
+              <p>Nouveau prix : {calcPromo()}€</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="danger" onClick={handleClose}>
+                Annuler
+              </Button>
+              <Button variant="success" onClick={onSubmitPromo}>
+                Valider la promotion
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      </div>
 
       <form onSubmit={(e) => onSubmit(e)}>
         <div className="custom-file mb-5 d-flex flex-column">
@@ -96,6 +211,7 @@ export default function EditProduct() {
             Ajouter une image
           </label>
           <input
+            required
             type="file"
             className="custom-file-input"
             name="image"
@@ -117,6 +233,7 @@ export default function EditProduct() {
             Nom du produit
           </label>
           <input
+            required
             type="text"
             className="form-control"
             name="name"
@@ -128,6 +245,7 @@ export default function EditProduct() {
         <div className="form-group mb-5">
           <label className="text-uppercase font-weight-bold">Description</label>
           <textarea
+            required
             type="textarea"
             className="form-control"
             name="description"
@@ -140,6 +258,7 @@ export default function EditProduct() {
         <div className="form-group mb-5">
           <label className="text-uppercase font-weight-bold">Prix</label>
           <input
+            required
             type="text"
             className="form-control"
             name="price"
@@ -155,9 +274,11 @@ export default function EditProduct() {
           <select
             className="custom-select custom-select-lg mb-5"
             onChange={(e) => onInputChange(e)}
-            name="productCategory"
-            value={productCategory}
+            name="category"
+            value={category}
           >
+            <option>Sélectionner une catégorie</option>
+
             {categories.map((category, index) => (
               <option category={category} key={index}>
                 {category.tag}
@@ -168,31 +289,12 @@ export default function EditProduct() {
 
         <div className="form-group mb-3">
           <div className="from-control d-flex justify-content-around">
-            <>
-              <Button variant="danger" onClick={handleShow}>
-                Supprimer le produit
-              </Button>
-
-              <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Supprimer le produit</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  Etes vous sûr(e) de vouloir supprimer ce produit?
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    variant="danger"
-                    onClick={() => deleteProduct(product.id)}
-                  >
-                    Supprimer
-                  </Button>
-                  <Button variant="primary" onClick={handleClose}>
-                    Annuler
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-            </>
+            <button
+              className="btn btn-primary mt-2 btn-danger"
+              onClick={deleteProduct}
+            >
+              Supprimer le produit
+            </button>
             <button className="btn btn-primary mt-2">
               Modifier le produit
             </button>
