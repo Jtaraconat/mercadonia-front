@@ -35,7 +35,9 @@ export default function Login() {
           navigate("/admin");
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        alert("identifiants incorrects");
+      });
   };
 
   return (

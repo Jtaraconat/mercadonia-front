@@ -25,7 +25,7 @@ export default function Admin() {
     <div>
       {isLoggedIn ? (
         <div className="container-fluid" style={{ minHeight: "600px" }}>
-          <div className="d-flex mt-5 flex-row shadow">
+          <div className="d-flex mt-5 flex-row justify-content-center shadow">
             <Link className="btn btn-outline-dark m-3" to="/admin/addproduct">
               Ajouter un produit
             </Link>
