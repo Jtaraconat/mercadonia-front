@@ -18,17 +18,23 @@ export default function EditProduct() {
   const { id } = useParams();
 
   const loadCategories = async () => {
-    const res = await axios.get("http://localhost:8080/categories");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
+    );
     setCategories(res.data);
   };
 
   const loadProduct = async () => {
-    const res = await axios.get(`http://localhost:8080/product/${id}`);
+    const res = await axios.get(
+      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`
+    );
     setProduct(res.data);
   };
 
   const deleteProduct = async (id) => {
-    const res = axios.delete(`http://localhost:8080/product/${id}`);
+    const res = axios.delete(
+      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`
+    );
     navigate("/admin");
   };
 
@@ -121,13 +127,19 @@ export default function EditProduct() {
       alert("Champ(s) manquant(s)");
       return;
     }
-    await axios.put(`http://localhost:8080/product/${product.id}`, product);
+    await axios.put(
+      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${product.id}`,
+      product
+    );
     navigate("/");
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`http://localhost:8080/product/${id}`, product);
+    await axios.put(
+      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`,
+      product
+    );
     navigate("/admin");
   };
 

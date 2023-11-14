@@ -4,13 +4,15 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  let regex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let navigate = useNavigate();
   const [admin, setAdmin] = useState({
     username: "",
     email: "",
     password: "",
   });
-
+  const [emailError, setEmailError] = useState("");
   const { username, email, password } = admin;
 
   const onInputChange = (e) => {
@@ -20,13 +22,23 @@ export default function Login() {
     });
   };
 
+  const adminEmailChange = (e) => {
+    setAdmin({ ...admin, email: e.target.value });
+    if (regex.test(e.target.value)) {
+      setAdmin({ ...admin, email: e.target.value });
+      setEmailError("");
+    } else {
+      setEmailError("email invalide");
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:8080/login", admin)
+      .post("https://mercadona-back-f6ca31b18f7a.herokuapp.com/login", admin)
       .then((response) => {
         if (response.status === 403) {
-          console.log("not");
+          alert("");
         }
 
         const token = response.data.token;
@@ -57,8 +69,9 @@ export default function Login() {
             name="email"
             placeholder="Adresse e-mail"
             value={email}
-            onChange={(e) => onInputChange(e)}
+            onChange={(e) => adminEmailChange(e)}
           />
+          {emailError && <p style={{ color: "red" }}>{emailError}</p>}
           <label className="text-uppercase font-weight-bold">Username</label>
           <input
             required

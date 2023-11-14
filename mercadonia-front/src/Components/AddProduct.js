@@ -13,7 +13,9 @@ export default function AddProduct() {
   const handleShow = () => setShow(true);
 
   const loadCategories = async () => {
-    const res = await axios.get("http://localhost:8080/categories");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
+    );
     setCategories(res.data);
   };
 
@@ -57,7 +59,7 @@ export default function AddProduct() {
       alert("saisir un nom pour la catégorie");
     } else {
       const res = await axios.post(
-        `http://localhost:8080/category`,
+        `https://mercadona-back-f6ca31b18f7a.herokuapp.com/category`,
         newCategory
       );
       handleClose();
@@ -96,7 +98,10 @@ export default function AddProduct() {
       alert("Un ou plusieurs champ(s) manquant(s)");
       return;
     }
-    await axios.post("http://localhost:8080/product", product);
+    await axios.post(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/product",
+      product
+    );
     navigate("/admin");
   };
 

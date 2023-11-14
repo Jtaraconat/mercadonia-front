@@ -17,7 +17,9 @@ export default function HandleAdmins() {
   }, [admins]);
 
   const loadAdmins = async () => {
-    const res = await axios.get("http://localhost:8080/admins");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/admins"
+    );
     setAdmins(res.data);
   };
 
@@ -40,7 +42,9 @@ export default function HandleAdmins() {
 
   const deleteAdmin = async (e) => {
     e.preventDefault();
-    await axios.delete(`http://localhost:8080/admin/${adminId}`);
+    await axios.delete(
+      `https://mercadona-back-f6ca31b18f7a.herokuapp.com//admin/${adminId}`
+    );
   };
 
   const addAdmin = async (e) => {
@@ -51,7 +55,10 @@ export default function HandleAdmins() {
         return;
       }
     }
-    const res = await axios.post("http://localhost:8080/register", newAdmin);
+    const res = await axios.post(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/register",
+      newAdmin
+    );
   };
 
   return (

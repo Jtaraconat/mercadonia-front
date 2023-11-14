@@ -20,12 +20,16 @@ export default function SearchProduct() {
   }, []);
 
   const loadCategories = async () => {
-    const res = await axios.get("http://localhost:8080/categories");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
+    );
     setCategories(res.data);
   };
 
   const loadProducts = async () => {
-    const res = await axios.get("http://localhost:8080/products");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/products"
+    );
     setProductsList(res.data);
   };
 

@@ -29,14 +29,16 @@ export default function HandleCategories() {
       alert("saisir un nom pour la catégorie");
     } else {
       const res = await axios.post(
-        `http://localhost:8080/category`,
+        `https://mercadona-back-f6ca31b18f7a.herokuapp.com/category`,
         newCategory
       );
     }
   };
 
   const loadCategories = async () => {
-    const res = await axios.get("http://localhost:8080/categories");
+    const res = await axios.get(
+      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
+    );
     setCategories(res.data);
   };
 
@@ -47,7 +49,9 @@ export default function HandleCategories() {
   const deleteCategory = async (e) => {
     e.preventDefault();
     await axios
-      .delete(`http://localhost:8080/category/${categoryId}`)
+      .delete(
+        `https://mercadona-back-f6ca31b18f7a.herokuapp.com/category/${categoryId}`
+      )
       .catch((error) => {
         alert("id introuvable");
       });
