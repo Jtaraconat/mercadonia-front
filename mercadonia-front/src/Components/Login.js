@@ -3,6 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
+const instance = axios.create();
+instance.defaults.timeout = 250000;
+
 export default function Login() {
   let regex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -35,7 +38,7 @@ export default function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios
+    await instance
       .post(`${DB_URI}/login`, admin)
       .then((response) => {
         if (response.status === 403) {
