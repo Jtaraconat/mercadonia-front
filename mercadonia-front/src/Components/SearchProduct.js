@@ -10,6 +10,7 @@ export default function SearchProduct() {
   const [searchedInput, setsearchedInput] = useState("");
   const [productsList, setProductsList] = useState("");
   const [foundProduct, setFoundProduct] = useState([]);
+  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
 
   const [productVisibility, setProductVisibility] = useState(false);
   const { id } = useParams();

@@ -9,6 +9,7 @@ export default function EditProduct() {
   let finalPrice = 0;
   let promoStartTimestamp;
   let promoEndTimestamp;
+  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
   const [show, setShow] = useState(false);

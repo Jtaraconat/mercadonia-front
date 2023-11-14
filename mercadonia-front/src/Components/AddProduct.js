@@ -3,10 +3,10 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import uri from "../Utils/utils";
 
 export default function AddProduct() {
   let navigate = useNavigate();
+  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
   const [show, setShow] = useState(false);

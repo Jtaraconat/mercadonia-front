@@ -3,6 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HandleAdmins() {
+  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
   const [admins, setAdmins] = useState([]);
   const [newAdmin, setNewAdmin] = useState([]);
   const [adminId, setAdminId] = useState(0);
