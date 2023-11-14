@@ -18,23 +18,17 @@ export default function EditProduct() {
   const { id } = useParams();
 
   const loadCategories = async () => {
-    const res = await axios.get(
-      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
-    );
+    const res = await axios.get(`${DB_URI}/categories`);
     setCategories(res.data);
   };
 
   const loadProduct = async () => {
-    const res = await axios.get(
-      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`
-    );
+    const res = await axios.get(`${DB_URI}/product/${id}`);
     setProduct(res.data);
   };
 
   const deleteProduct = async (id) => {
-    const res = axios.delete(
-      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`
-    );
+    const res = axios.delete(`${DB_URI}/product/${id}`);
     navigate("/admin");
   };
 

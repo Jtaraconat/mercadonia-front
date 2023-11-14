@@ -35,7 +35,7 @@ export default function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios
-      .post("https://mercadona-back-f6ca31b18f7a.herokuapp.com/login", admin)
+      .post(`${DB_URI}/login`, admin)
       .then((response) => {
         if (response.status === 403) {
           alert("");

@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import uri from "../Utils/utils";
 
 export default function AddProduct() {
   let navigate = useNavigate();
@@ -13,9 +14,7 @@ export default function AddProduct() {
   const handleShow = () => setShow(true);
 
   const loadCategories = async () => {
-    const res = await axios.get(
-      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/categories"
-    );
+    const res = await axios.get(`${DB_URI}/categories`);
     setCategories(res.data);
   };
 
@@ -58,10 +57,7 @@ export default function AddProduct() {
     if (newCategory.tag.length === 0) {
       alert("saisir un nom pour la catégorie");
     } else {
-      const res = await axios.post(
-        `https://mercadona-back-f6ca31b18f7a.herokuapp.com/category`,
-        newCategory
-      );
+      const res = await axios.post(`${DB_URI}/category`, newCategory);
       handleClose();
     }
   };
@@ -98,10 +94,7 @@ export default function AddProduct() {
       alert("Un ou plusieurs champ(s) manquant(s)");
       return;
     }
-    await axios.post(
-      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/product",
-      product
-    );
+    await axios.post(`${DB_URI}/product`, product);
     navigate("/admin");
   };
 

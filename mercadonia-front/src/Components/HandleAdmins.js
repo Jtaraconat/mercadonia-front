@@ -42,9 +42,7 @@ export default function HandleAdmins() {
 
   const deleteAdmin = async (e) => {
     e.preventDefault();
-    await axios.delete(
-      `https://mercadona-back-f6ca31b18f7a.herokuapp.com//admin/${adminId}`
-    );
+    await axios.delete(`${DB_URI}/admin/${adminId}`);
   };
 
   const addAdmin = async (e) => {
@@ -55,10 +53,7 @@ export default function HandleAdmins() {
         return;
       }
     }
-    const res = await axios.post(
-      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/register",
-      newAdmin
-    );
+    const res = await axios.post(`${DB_URI}/register`, newAdmin);
   };
 
   return (
