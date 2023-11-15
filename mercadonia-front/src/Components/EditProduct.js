@@ -122,19 +122,13 @@ export default function EditProduct() {
       alert("Champ(s) manquant(s)");
       return;
     }
-    await axios.put(
-      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${product.id}`,
-      product
-    );
+    await axios.put(`${DB_URI}/product/${product.id}`, product);
     navigate("/");
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(
-      `https://mercadona-back-f6ca31b18f7a.herokuapp.com/product/${id}`,
-      product
-    );
+    await axios.put(`${DB_URI}/product/${id}`, product);
     navigate("/admin");
   };
 
