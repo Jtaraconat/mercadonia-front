@@ -13,7 +13,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState([false]);
   const [selectedCategories, setSelectedCategories] =
     useState("All categories");
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com/";
+  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
 
   useEffect(() => {
     loadProducts();

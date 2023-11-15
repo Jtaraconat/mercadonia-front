@@ -10,7 +10,7 @@ export default function Login() {
   let regex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let navigate = useNavigate();
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com/";
+  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
   const [admin, setAdmin] = useState({
     username: "",
     email: "",
