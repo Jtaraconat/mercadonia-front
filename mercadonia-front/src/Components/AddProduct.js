@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function AddProduct() {
   let navigate = useNavigate();
-  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
+  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com/";
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
   const [show, setShow] = useState(false);

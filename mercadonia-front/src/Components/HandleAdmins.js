@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HandleAdmins() {
-  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
+  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com/";
   const [admins, setAdmins] = useState([]);
   const [newAdmin, setNewAdmin] = useState([]);
   const [adminId, setAdminId] = useState(0);
@@ -18,9 +18,7 @@ export default function HandleAdmins() {
   }, [admins]);
 
   const loadAdmins = async () => {
-    const res = await axios.get(
-      "https://mercadona-back-f6ca31b18f7a.herokuapp.com/admins"
-    );
+    const res = await axios.get(`${DB_URI}/admins`);
     setAdmins(res.data);
   };
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function HandleCategories() {
   let navigate = useNavigate();
-  const DB_URI = "https://mercadona-backend-fca430085216.herokuapp.com";
+  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com/";
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [newCategory, setNewCategory] = useState({
