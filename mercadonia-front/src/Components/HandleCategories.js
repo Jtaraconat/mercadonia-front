@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function HandleCategories() {
   let navigate = useNavigate();
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
+  const DB_URI = "http://localhost:8080";
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [newCategory, setNewCategory] = useState({
@@ -59,7 +59,7 @@ export default function HandleCategories() {
           Retour
         </button>
       </div>
-      <div className="d-flex flex-row">
+      <div className="d-flex flex-row justify-content-around">
         <ul>
           {categories.map((cat, index) => (
             <li category={cat} key={index}>

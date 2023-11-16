@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState([false]);
+  let navigate = useNavigate();
 
   useEffect(() => {
     checkLogin();
@@ -12,6 +13,7 @@ export default function Admin() {
   const checkLogin = () => {
     if (Cookies.get("token") === undefined) {
       setIsLoggedIn(false);
+      navigate("/login");
     } else {
       setIsLoggedIn(true);
     }

@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-
-const instance = axios.create();
-instance.defaults.timeout = 250000;
 
 export default function Login() {
   let regex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let navigate = useNavigate();
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
+  const DB_URI = "http://localhost:8080";
   const [admin, setAdmin] = useState({
     username: "",
     email: "",
@@ -18,6 +15,21 @@ export default function Login() {
   });
   const [emailError, setEmailError] = useState("");
   const { username, email, password } = admin;
+  const [isLoggedIn, setIsLoggedIn] = useState([false]);
+
+  useEffect(() => {
+    checkLogin();
+  }, [isLoggedIn]);
+
+  const checkLogin = () => {
+    if (Cookies.get("token") === undefined) {
+      setIsLoggedIn(false);
+      return;
+    } else {
+      setIsLoggedIn(true);
+      navigate("/admin");
+    }
+  };
 
   const onInputChange = (e) => {
     setAdmin({
@@ -38,7 +50,7 @@ export default function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await instance
+    await axios
       .post(`${DB_URI}/login`, admin)
       .then((response) => {
         if (response.status === 403) {

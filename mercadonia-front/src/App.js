@@ -20,8 +20,8 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
 
-          {/*<Route element={<ProtectedRoutes />}>*/}
-          {/*<Route element={<ProtectedRoutes />}>*/}
+          <Route element={<ProtectedRoutes />} />
+
           <Route exact path="/admin" element={<Admin />} />
           <Route exact path="/admin/addproduct" element={<AddProduct />} />
           <Route
@@ -40,7 +40,7 @@ function App() {
             element={<HandleCategories />}
           />
           <Route exact path="/admin/newadmin" element={<HandleAdmins />} />
-
+          <Route element={<ProtectedRoutes />} />
           <Route exact path="/login" element={<Login />} />
         </Routes>
       </Router>

@@ -9,7 +9,7 @@ export default function EditProduct() {
   let finalPrice = 0;
   let promoStartTimestamp;
   let promoEndTimestamp;
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
+  const DB_URI = "http://localhost:8080";
   const [categories, setCategories] = useState([]);
   const [dataURI, setDataURI] = useState("");
   const [show, setShow] = useState(false);
@@ -29,7 +29,7 @@ export default function EditProduct() {
   };
 
   const deleteProduct = async (id) => {
-    const res = axios.delete(`${DB_URI}/product/${id}`);
+    const res = axios.delete(`${DB_URI}/product/${product.id}`);
     navigate("/admin");
   };
 
@@ -292,7 +292,7 @@ export default function EditProduct() {
           <div className="from-control d-flex justify-content-around">
             <button
               className="btn btn-primary mt-2 btn-danger"
-              onClick={deleteProduct}
+              onClick={(id) => deleteProduct(id)}
             >
               Supprimer le produit
             </button>

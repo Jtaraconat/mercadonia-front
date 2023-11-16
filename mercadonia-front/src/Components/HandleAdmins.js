@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HandleAdmins() {
-  const DB_URI = "https://mercadona-backend-a4636f3a3a49.herokuapp.com";
+  const DB_URI = "http://localhost:8080";
   const [admins, setAdmins] = useState([]);
   const [newAdmin, setNewAdmin] = useState([]);
   const [adminId, setAdminId] = useState(0);
@@ -65,7 +65,7 @@ export default function HandleAdmins() {
           Retour
         </button>
       </div>
-      <div className="d-flex flex-row">
+      <div className="d-flex flex-row justify-content-around">
         <ul>
           {admins.map((ad, index) => (
             <li category={ad} key={index}>
